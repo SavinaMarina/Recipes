@@ -28,19 +28,20 @@ public class RecipeService {
                 .orElseThrow(RecipeNotFoundException::new);
     }
 
-    public void deleteById(Long id) {
-        Recipe recipeToDelete =
-                repository.findById(id).orElseThrow(RecipeNotFoundException::new);
-        if (!recipeToDelete.getUser().equals(userService.getCurrentUser()))
+    private void checkModificationPermission(Recipe recipe) {
+        if (!recipe.getUser().equals(userService.getCurrentUser()))
             throw new RecipeModificationForbiddenException();
+    }
+
+    public void deleteById(Long id) {
+        Recipe recipeToDelete = findById(id);
+        checkModificationPermission(recipeToDelete);
         repository.deleteById(id);
     }
 
     public void update(Long id, Recipe recipe) {
-        Recipe recipeToUpdate =
-                repository.findById(id).orElseThrow(RecipeNotFoundException::new);
-        if (!recipeToUpdate.getUser().equals(userService.getCurrentUser()))
-            throw new RecipeModificationForbiddenException();
+        Recipe recipeToUpdate = findById(id);
+        checkModificationPermission(recipeToUpdate);
         recipeToUpdate.setName(recipe.getName());
         recipeToUpdate.setDescription(recipe.getDescription());
         recipeToUpdate.setCategory(recipe.getCategory());
