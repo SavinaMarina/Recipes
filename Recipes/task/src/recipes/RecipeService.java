@@ -46,7 +46,6 @@ public class RecipeService {
         recipeToUpdate.setCategory(recipe.getCategory());
         recipeToUpdate.setDirections(recipe.getDirections());
         recipeToUpdate.setIngredients(recipe.getIngredients());
-        recipeToUpdate.setUser(userService.getCurrentUser());
         repository.save(recipeToUpdate);
     }
 
